@@ -2,6 +2,9 @@ package pl.sebcel.librus.client;
 
 import org.osgi.util.tracker.ServiceTracker;
 import pl.sebcel.librus.accountprovider.api.AccountProvider;
+import pl.sebcel.librus.accountprovider.api.LibrusAccount;
+
+import java.util.List;
 
 public class ClientThread implements Runnable {
 
@@ -21,7 +24,15 @@ public class ClientThread implements Runnable {
             try {
                 System.out.println("Client thread run");
                 System.out.println("Account providers: " + accountProviderServiceTracker.size());
-                Thread.sleep(1000);
+                AccountProvider accountProvider = accountProviderServiceTracker.getService();
+                if (accountProvider != null) {
+                    System.out.println("Getting configuration from account provider");
+
+                    List<LibrusAccount> librusAccounts = accountProvider.getLibrusAccounts();
+                    System.out.println("Loaded " + librusAccounts.size()+" librus accounts information");
+                }
+
+                Thread.sleep(5000);
             } catch (Exception ex) {
                 // intentional
             }
