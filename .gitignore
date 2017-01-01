@@ -1,0 +1,8 @@
+*.iml
+/.idea/
+.idea/workspace.xml
+client/.gradle/
+client/build/
+/client/gradle/
+/client/gradlew
+/client/gradlew.bat
