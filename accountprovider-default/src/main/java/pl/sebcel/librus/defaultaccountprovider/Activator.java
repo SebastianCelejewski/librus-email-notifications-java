@@ -12,7 +12,7 @@ public class Activator implements BundleActivator {
         System.out.println("Starting Default Account Provider");
 
         System.out.println("Registering account provider service");
-        DefaultAccountProvider provider = new DefaultAccountProvider();
+        DefaultAccountProvider provider = new DefaultAccountProvider(context);
         context.registerService(AccountProvider.class.getName(), provider, null);
     }
 

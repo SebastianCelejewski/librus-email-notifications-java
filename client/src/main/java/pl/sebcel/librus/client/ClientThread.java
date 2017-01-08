@@ -1,5 +1,6 @@
 package pl.sebcel.librus.client;
 
+import org.osgi.service.log.LogService;
 import org.osgi.util.tracker.ServiceTracker;
 import pl.sebcel.librus.accountprovider.api.AccountProvider;
 import pl.sebcel.librus.accountprovider.api.LibrusAccount;
@@ -9,27 +10,31 @@ import java.util.List;
 public class ClientThread implements Runnable {
 
     private boolean terminate = false;
-    private ServiceTracker<AccountProvider, AccountProvider> accountProviderServiceTracker;
 
-    public ClientThread(ServiceTracker<AccountProvider, AccountProvider> accountProviderServiceTracker) {
+    private ServiceTracker<AccountProvider, AccountProvider> accountProviderServiceTracker;
+    private ServiceTracker<LogService, LogService> logServiceTracker;
+
+    public ClientThread(ServiceTracker<AccountProvider, AccountProvider> accountProviderServiceTracker, ServiceTracker<LogService, LogService> logServiceTracker) {
         this.accountProviderServiceTracker = accountProviderServiceTracker;
+        this.logServiceTracker = logServiceTracker;
     }
 
     @Override
     public void run() {
         terminate = false;
-        System.out.println("Starting Librus Email Notifications client thread");
+
+        logInfo("Starting Librus Email Notifications client thread");
 
         while (!terminate) {
             try {
-                System.out.println("Client thread run");
-                System.out.println("Account providers: " + accountProviderServiceTracker.size());
+                logInfo("Client thread run");
+                logInfo("Account providers: " + accountProviderServiceTracker.size());
                 AccountProvider accountProvider = accountProviderServiceTracker.getService();
                 if (accountProvider != null) {
-                    System.out.println("Getting configuration from account provider");
+                    logInfo("Getting configuration from account provider");
 
                     List<LibrusAccount> librusAccounts = accountProvider.getLibrusAccounts();
-                    System.out.println("Loaded " + librusAccounts.size()+" librus accounts information");
+                    logInfo("Loaded " + librusAccounts.size()+" librus accounts information");
                 }
 
                 Thread.sleep(5000);
@@ -38,10 +43,21 @@ public class ClientThread implements Runnable {
             }
         }
 
-        System.out.println("Stopped Librus Email Notifications client thread");
+        logInfo("Stopped Librus Email Notifications client thread");
     }
 
     public void terminate() {
         this.terminate = true;
+    }
+
+    private void logInfo(String text) {
+        try {
+            LogService logService = logServiceTracker.waitForService(1000);
+            if (logService != null) {
+                logService.log(LogService.LOG_INFO, text);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 }

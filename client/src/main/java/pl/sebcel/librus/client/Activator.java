@@ -2,6 +2,7 @@ package pl.sebcel.librus.client;
 
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
+import org.osgi.service.log.LogService;
 import org.osgi.util.tracker.ServiceTracker;
 import pl.sebcel.librus.accountprovider.api.AccountProvider;
 
@@ -13,10 +14,13 @@ public class Activator implements BundleActivator {
     public void start(BundleContext context) throws Exception {
         System.out.println("Starting Librus Email Notifications Client");
 
-        ServiceTracker<AccountProvider, AccountProvider> accountProviderServiceTracker = new ServiceTracker<AccountProvider, AccountProvider>(context, AccountProvider.class.getName(), null);
+        ServiceTracker<AccountProvider, AccountProvider> accountProviderServiceTracker = new ServiceTracker<>(context, AccountProvider.class.getName(), null);
         accountProviderServiceTracker.open();
 
-        clientThread = new ClientThread(accountProviderServiceTracker);
+        ServiceTracker<LogService, LogService> logServiceTracker = new ServiceTracker<LogService, LogService>(context, LogService.class.getName(), null);
+        logServiceTracker.open();
+
+        clientThread = new ClientThread(accountProviderServiceTracker, logServiceTracker);
         new Thread(clientThread).start();
     }
 

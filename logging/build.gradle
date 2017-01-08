@@ -10,12 +10,10 @@ apply plugin: 'java'
 sourceCompatibility = 1.8
 
 bundle {
-    instruction 'Bundle-Activator', 'pl.sebcel.librus.client.Activator'
-    instruction 'Export-Package', 'pl.sebcel.librus.accountprovider.api'
+    instruction 'Bundle-Activator', 'pl.sebcel.librus.logging.Activator'
 }
 
 repositories {
-    mavenLocal()
     mavenCentral()
 }
 
@@ -23,10 +21,4 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
     compile group: 'org.apache.felix', name: 'org.apache.felix.framework', version: '5.6.1'
     compile group: 'org.apache.felix', name: 'org.apache.felix.log', version: '1.0.1'
-}
-
-uploadArchives {
-    repositories {
-        mavenLocal()
-    }
 }
