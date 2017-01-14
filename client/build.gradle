@@ -22,7 +22,6 @@ repositories {
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
     compile group: 'org.apache.felix', name: 'org.apache.felix.framework', version: '5.6.1'
-    compile group: 'org.apache.felix', name: 'org.apache.felix.log', version: '1.0.1'
 }
 
 uploadArchives {

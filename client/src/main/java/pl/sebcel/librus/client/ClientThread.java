@@ -1,6 +1,5 @@
 package pl.sebcel.librus.client;
 
-import org.osgi.service.log.LogService;
 import org.osgi.util.tracker.ServiceTracker;
 import pl.sebcel.librus.accountprovider.api.AccountProvider;
 import pl.sebcel.librus.accountprovider.api.LibrusAccount;
@@ -12,11 +11,9 @@ public class ClientThread implements Runnable {
     private boolean terminate = false;
 
     private ServiceTracker<AccountProvider, AccountProvider> accountProviderServiceTracker;
-    private ServiceTracker<LogService, LogService> logServiceTracker;
 
-    public ClientThread(ServiceTracker<AccountProvider, AccountProvider> accountProviderServiceTracker, ServiceTracker<LogService, LogService> logServiceTracker) {
+    public ClientThread(ServiceTracker<AccountProvider, AccountProvider> accountProviderServiceTracker) {
         this.accountProviderServiceTracker = accountProviderServiceTracker;
-        this.logServiceTracker = logServiceTracker;
     }
 
     @Override
@@ -37,7 +34,7 @@ public class ClientThread implements Runnable {
                     logInfo("Loaded " + librusAccounts.size()+" librus accounts information");
                 }
 
-                Thread.sleep(5000);
+                Thread.sleep(30000);
             } catch (Exception ex) {
                 // intentional
             }
@@ -51,13 +48,6 @@ public class ClientThread implements Runnable {
     }
 
     private void logInfo(String text) {
-        try {
-            LogService logService = logServiceTracker.waitForService(1000);
-            if (logService != null) {
-                logService.log(LogService.LOG_INFO, text);
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        System.out.println(text);
     }
 }
