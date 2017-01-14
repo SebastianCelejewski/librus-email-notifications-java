@@ -13,14 +13,14 @@ public class Activator implements BundleActivator {
 
     @Override
     public void start(BundleContext context) throws Exception {
-        log.info("Log4j info");
-        log.error("Log4j error");
-        System.out.println("Starting Default Account Provider");
+        log.info("Starting Default Account Provider");
 
-        System.out.println("Registering account provider service");
+        log.info("Registering account provider service");
         DefaultAccountProvider provider = new DefaultAccountProvider(context);
         context.registerService(AccountProvider.class.getName(), provider, null);
-    }
+
+        log.info("Default Account Provider started successfully");
+   }
 
     @Override
     public void stop(BundleContext context) throws Exception {

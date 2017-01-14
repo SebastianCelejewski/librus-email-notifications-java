@@ -1,13 +1,18 @@
 package pl.sebcel.librus.defaultaccountprovider.service;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.osgi.framework.BundleContext;
 import pl.sebcel.librus.accountprovider.api.AccountProvider;
 import pl.sebcel.librus.accountprovider.api.LibrusAccount;
+import pl.sebcel.librus.defaultaccountprovider.Activator;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class DefaultAccountProvider implements AccountProvider {
+
+    private Logger log = LogManager.getLogger(DefaultAccountProvider.class);
 
     private BundleContext bundleContext;
 
@@ -38,7 +43,7 @@ public class DefaultAccountProvider implements AccountProvider {
 
             LibrusAccount account = new LibrusAccount(login, password, recipients);
             result.add(account);
-            System.out.println("Loaded Librus account configuration for login " + login);
+            log.info("Loaded Librus account configuration for login " + login);
 
             i += 1;
         }

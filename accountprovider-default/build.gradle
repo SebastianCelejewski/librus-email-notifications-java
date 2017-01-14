@@ -22,11 +22,16 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
     compile group: 'org.apache.felix', name: 'org.apache.felix.framework', version: '5.6.1'
     compile group: 'pl.sebcel.librus', name: 'client', version: '1.0-SNAPSHOT'
-    compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.7'
+    compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.1'
 }
 
 uploadArchives {
     repositories {
         mavenLocal()
     }
+}
+
+task deploy(type: Copy, dependsOn: build) {
+    from 'build/libs/accountprovider-default-1.0-SNAPSHOT.jar'
+    into 'd:/java/felix-framework-5.6.1/bundle'
 }

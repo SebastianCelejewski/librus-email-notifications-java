@@ -1,5 +1,7 @@
 package pl.sebcel.librus.client;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.osgi.util.tracker.ServiceTracker;
 import pl.sebcel.librus.accountprovider.api.AccountProvider;
 import pl.sebcel.librus.accountprovider.api.LibrusAccount;
@@ -7,6 +9,8 @@ import pl.sebcel.librus.accountprovider.api.LibrusAccount;
 import java.util.List;
 
 public class ClientThread implements Runnable {
+
+    private Logger log = LogManager.getLogger(ClientThread.class);
 
     private boolean terminate = false;
 
@@ -20,18 +24,18 @@ public class ClientThread implements Runnable {
     public void run() {
         terminate = false;
 
-        logInfo("Starting Librus Email Notifications client thread");
+        log.info("Starting Librus Email Notifications client thread");
 
         while (!terminate) {
             try {
-                logInfo("Client thread run");
-                logInfo("Account providers: " + accountProviderServiceTracker.size());
+                log.debug("Client thread run");
+                log.debug("Account providers: " + accountProviderServiceTracker.size());
                 AccountProvider accountProvider = accountProviderServiceTracker.getService();
                 if (accountProvider != null) {
-                    logInfo("Getting configuration from account provider");
+                    log.debug("Getting configuration from account provider");
 
                     List<LibrusAccount> librusAccounts = accountProvider.getLibrusAccounts();
-                    logInfo("Loaded " + librusAccounts.size()+" librus accounts information");
+                    log.debug("Loaded " + librusAccounts.size()+" librus accounts information");
                 }
 
                 Thread.sleep(30000);
@@ -40,14 +44,10 @@ public class ClientThread implements Runnable {
             }
         }
 
-        logInfo("Stopped Librus Email Notifications client thread");
+        log.info("Stopped Librus Email Notifications client thread");
     }
 
     public void terminate() {
         this.terminate = true;
-    }
-
-    private void logInfo(String text) {
-        System.out.println(text);
     }
 }
